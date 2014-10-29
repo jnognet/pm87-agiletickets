@@ -190,7 +190,7 @@ public class CalculadoraDePrecosTest {
 		
 		BigDecimal precoTotal = CalculadoraDePrecos.calcula(sessao, 1);
 		
-		assertEquals(0, BigDecimal.valueOf(10.0).compareTo(precoTotal));
+		assertEquals(10.0, precoTotal.doubleValue(), 0.001);
 	}
 
 }

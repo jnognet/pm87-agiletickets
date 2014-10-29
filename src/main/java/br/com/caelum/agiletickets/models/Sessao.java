@@ -32,8 +32,8 @@ public class Sessao {
 
 	private Integer ingressosReservados = 0;
 
-	private BigDecimal preco;
-
+	private BigDecimal preco; // preco inicial sem os calculos de lotacao e duracao
+		
 	public Long getId() {
 		return id;
 	}
@@ -119,6 +119,22 @@ public class Sessao {
 
 	public BigDecimal getPreco() {
 		return preco;
+	}
+		
+	public BigDecimal calculaPrecoFinal() {
+		BigDecimal preco = getPreco();
+		if( (getIngressosDisponiveis() / getTotalIngressos().doubleValue()) <= getEspetaculo().getTipo().getPercentualSobreprecoLotacao()) {
+			preco = aplicaTaxaDeSobrePreco(getPreco(), getPreco(), getEspetaculo().getTipo().getTaxaSobreprecoLotacao());
+		}
+		Integer duracaoEmMinutos = getDuracaoEmMinutos();
+		if(duracaoEmMinutos != null && duracaoEmMinutos > getEspetaculo().getTipo().getTempoSobreprecoDuracao()) {			
+			preco = aplicaTaxaDeSobrePreco(preco, getPreco(), getEspetaculo().getTipo().getTaxaSobreprecoDuracao());
+		}		
+		return preco;		
+	}	
+	
+	private BigDecimal aplicaTaxaDeSobrePreco(BigDecimal precoInicial, BigDecimal precoASerTaxado, double taxa) {
+		return precoInicial.add(precoASerTaxado.multiply(BigDecimal.valueOf(taxa)));
 	}
 	
 }
